@@ -1,6 +1,8 @@
 # APItemplateV2
 ForkSilly应用的API模板仓库。
 
+示例模板请在仓库templates目录下载：https://github.com/fatsnk/APItemplateV2/tree/main/templates
+
 # API 模板制作说明书
 
 ## 概述
