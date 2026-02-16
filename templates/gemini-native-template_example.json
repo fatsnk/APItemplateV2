@@ -1,0 +1,103 @@
+{
+  "version": 2,
+  "name": "Google Gemini (Native API) for example",
+
+  "connection": {
+    "endpoint": "/v1beta/models/{{model}}:generateContent",
+    "streamEndpoint": "/v1beta/models/{{model}}:streamGenerateContent?alt=sse",
+    "modelEndpoint": "/v1beta/models",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "auth": {
+      "header": "x-goog-api-key",
+      "prefix": ""
+    }
+  },
+
+  "request": {
+    "bodyTemplate": {
+      "contents": [],
+      "generationConfig": {
+        "temperature": 0.7,
+        "maxOutputTokens": 2048,
+        "topP": 0.95,
+        "topK": 40
+      },
+      "safetySettings": [
+        { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE" },
+        { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE" },
+        { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE" },
+        { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE" },
+        { "category": "HARM_CATEGORY_CIVIC_INTEGRITY", "threshold": "BLOCK_NONE" }
+      ]
+    },
+    "samplerMappings": [
+      { "samplerID": "temperature", "path": "$.generationConfig.temperature" },
+      { "samplerID": "maxTokens", "path": "$.generationConfig.maxOutputTokens", "transform": "integer" },
+      { "samplerID": "topP", "path": "$.generationConfig.topP" },
+      { "samplerID": "topK", "path": "$.generationConfig.topK", "transform": "integer" }
+    ],
+    "stop": {
+      "path": "$.generationConfig.stopSequences",
+      "limit": 5
+    },
+    "promptPath": "$.contents",
+    "promptFormat": {
+      "type": "chat",
+      "roles": {
+        "user": "user",
+        "assistant": "model",
+        "system": "user"
+      },
+      "contentKey": "parts"
+    }
+  },
+
+  "response": {
+    "transport": {
+      "type": "sse"
+    },
+    "contentPath": "$.candidates[0].content.parts[0].text",
+    "streamContentPath": "$.candidates[0].content.parts[0].text",
+    "reasoningPath": "$.candidates[0].content.parts[0].thought",
+    "streamReasoningPath": "$.candidates[0].content.parts[0].thought",
+    "error": {
+      "detectPath": "$.error",
+      "messagePath": "$.error.message"
+    }
+  },
+
+  "model": {
+    "useModelContextLength": true,
+    "listPath": "$.models",
+    "namePath": "$.name",
+    "contextLengthPath": "$.inputTokenLimit"
+  },
+
+  "features": {
+    "useKey": true,
+    "useModel": true,
+    "useStreaming": true
+  },
+
+  "uiOverridableSamplers": [
+    "temperature",
+    "maxTokens",
+    "topP",
+    "topK"
+  ],
+
+  "media": {
+    "supportsImages": true,
+    "imageContentTemplate": {
+      "inlineData": {
+        "mimeType": "{{mime_type}}",
+        "data": "{{image_base64}}"
+      }
+    },
+    "textContentTemplate": {
+      "text": "{{text}}"
+    }
+  }
+}

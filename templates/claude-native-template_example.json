@@ -1,0 +1,94 @@
+{
+  "version": 2,
+  "name": "Anthropic Claude (Native API) for example",
+
+  "connection": {
+    "endpoint": "/v1/messages",
+    "modelEndpoint": "/v1/models",
+    "headers": {
+      "Content-Type": "application/json",
+      "anthropic-version": "2023-06-01"
+    },
+    "auth": {
+      "header": "x-api-key",
+      "prefix": ""
+    }
+  },
+
+  "request": {
+    "bodyTemplate": {
+      "model": "{{model}}",
+      "messages": [],
+      "max_tokens": 4096,
+      "stop_sequences": ["\nHuman:", "\nAssistant:"],
+      "stream": false
+    },
+    "samplerMappings": [
+      { "samplerID": "temperature", "path": "$.temperature" },
+      { "samplerID": "maxTokens", "path": "$.max_tokens", "transform": "integer" },
+      { "samplerID": "topP", "path": "$.top_p" },
+      { "samplerID": "topK", "path": "$.top_k", "transform": "integer" }
+    ],
+    "stop": {
+      "path": "$.stop_sequences",
+      "limit": 5
+    },
+    "promptPath": "$.messages",
+    "promptFormat": {
+      "type": "chat",
+      "roles": {
+        "user": "user",
+        "assistant": "assistant",
+        "system": "user"
+      },
+      "contentKey": "content"
+    }
+  },
+
+  "response": {
+    "transport": {
+      "type": "sse"
+    },
+    "contentPath": "$.content[0].text",
+    "streamContentPath": "$.delta.text",
+    "error": {
+      "detectPath": "$.error",
+      "messagePath": "$.error.message"
+    }
+  },
+
+  "model": {
+    "useModelContextLength": false,
+    "listPath": "$.data",
+    "namePath": "$.id"
+  },
+
+  "features": {
+    "useKey": true,
+    "useModel": true,
+    "useStreaming": true
+  },
+
+  "uiOverridableSamplers": [
+    "temperature",
+    "maxTokens",
+    "topP",
+    "topK"
+  ],
+
+  "media": {
+    "supportsImages": true,
+    "imageContentTemplate": {
+      "type": "image",
+      "source": {
+        "type": "base64",
+        "media_type": "{{mime_type}}",
+        "data": "{{image_base64}}"
+      }
+    },
+    "textContentTemplate": {
+      "type": "text",
+      "text": "{{text}}"
+    }
+  }
+}

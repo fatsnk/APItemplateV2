@@ -1,0 +1,87 @@
+{
+  "version": 2,
+  "name": "OpenAI Responses API for example",
+
+  "connection": {
+    "endpoint": "/v1/responses",
+    "modelEndpoint": "/v1/models",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "auth": {
+      "header": "Authorization",
+      "prefix": "Bearer "
+    }
+  },
+
+  "request": {
+    "bodyTemplate": {
+      "model": "{{model}}",
+      "input": [],
+      "stream": false
+    },
+    "samplerMappings": [
+      { "samplerID": "temperature", "path": "$.temperature" },
+      { "samplerID": "maxTokens", "path": "$.max_output_tokens", "transform": "integer" },
+      { "samplerID": "topP", "path": "$.top_p" },
+      { "samplerID": "frequencyPenalty", "path": "$.frequency_penalty" },
+      { "samplerID": "presencePenalty", "path": "$.presence_penalty" },
+      { "samplerID": "reasoningEffort", "path": "$.reasoning.effort" }
+    ],
+    "promptPath": "$.input",
+    "promptFormat": {
+      "type": "chat",
+      "roles": {
+        "user": "user",
+        "assistant": "assistant",
+        "system": "system"
+      },
+      "contentKey": "content"
+    }
+  },
+
+  "response": {
+    "transport": {
+      "type": "sse"
+    },
+    "contentPath": "$.output[0].content[0].text",
+    "streamContentPath": "$.delta",
+    "error": {
+      "detectPath": "$.error",
+      "messagePath": "$.error.message"
+    }
+  },
+
+  "model": {
+    "useModelContextLength": false,
+    "listPath": "$.data",
+    "namePath": "$.id"
+  },
+
+  "features": {
+    "useKey": true,
+    "useModel": true,
+    "useStreaming": true
+  },
+
+  "uiOverridableSamplers": [
+    "temperature",
+    "maxTokens",
+    "topP",
+    "frequencyPenalty",
+    "presencePenalty",
+    "reasoningEffort"
+  ],
+
+  "media": {
+    "supportsImages": true,
+    "imageContentTemplate": {
+      "type": "input_image",
+      "image_url": "data:{{mime_type}};base64,{{image_base64}}"
+    },
+    "textContentTemplate": {
+      "type": "input_text",
+      "text": "{{text}}"
+    }
+  }
+}
