@@ -331,9 +331,9 @@ ForkSilly应用的API模板仓库。
 
 ---
 
-## 6. `features` — 功能开关（目前不会影响UI）
+## 6. `features` — 功能开关
 
-控制 UI 上哪些功能可见。
+控制部分功能逻辑的开关。
 
 ```json
 "features": {
@@ -351,9 +351,9 @@ ForkSilly应用的API模板仓库。
 
 ---
 
-## 7. `uiOverridableSamplers` — UI 可调参数（可选）
+## 7. `uiOverridableSamplers` — 可调参数（可选）
 
-列出哪些采样参数在 UI 上显示为可配置。未列出的参数在 UI 上隐藏，使用 `bodyTemplate` 中的固定值。(目前实际不会在UI上隐藏，配置需要的参数即可)
+列出哪些采样参数用户可手动配置。未列出的参数使用 `bodyTemplate` 中的固定值。(建议配置)
 
 ```json
 "uiOverridableSamplers": ["temperature", "maxTokens", "topP", "topK"]
@@ -437,7 +437,7 @@ Claude：
 | 语法 | 含义 | 示例 |
 |------|------|------|
 | `$` | 根对象 | `$` |
-| `.key` | 对象属性 | `$.temperature` |
+| `。key` | 对象属性 | `$.temperature` |
 | `[0]` | 数组索引 | `$.choices[0]` |
 | `["key"]` | 带引号的属性 | `$.["special-key"]` |
 
