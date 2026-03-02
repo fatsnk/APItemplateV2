@@ -276,10 +276,34 @@ ForkSilly应用的API模板仓库。
 
 | 字段 | 必填 | 说明 |
 |------|------|------|
-| `contentPath` | ✅ | 从非流式响应中提取内容的 JSONPath |
+| `contentPath` | ❌ | 从非流式响应中提取内容的 JSONPath ，如果存在contentParts，则此项非必填|
+| `contentParts` | ❌ | 从非流式响应中提取内容的 JSONPath ,数组格式，可配置多个path。与contentPath同时存在时，优先此项 |
 | `streamContentPath` | ❌ | 从流式响应中提取内容的 JSONPath。不填则复用 `contentPath` |
 | `reasoningPath` | ❌ | 从非流式响应中提取推理/思考内容的 JSONPath |
 | `streamReasoningPath` | ❌ | 从流式响应中提取推理/思考内容的 JSONPath |
+
+`contentParts`只支持非流，通常用于图片生成api。详情请参考模板[oai Image b64](https://github.com/fatsnk/APItemplateV2/blob/099c2e8b29bd8c3ea73a11f246b5481e281c626e/templates/oai%20Image%20b64(1024x).json)
+```
+"contentParts": [
+      {
+        "path": "$.data[0].revised_prompt"
+      },
+      {
+        "path": "$.data[0].b64_json",
+        "isMedia": {
+          "type": "image",
+          "mimeType": "image/png"
+        }
+      }
+    ],
+
+/* 支持的类型： */
+  type: 'image' | 'video' | 'audio';
+  /** MIME 类型，默认 'image/png' */
+  mimeType?: string;
+
+```
+聊天中只能渲染图片类型。不指定则为普通文本。
 
 **常见 API 的路径对照：**
 
