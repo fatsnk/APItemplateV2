@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "name": "OpenAI Image Generation(b64)",
+
+  "connection": {
+    "endpoint": "/v1/images/generations",
+    "modelEndpoint": "/v1/models",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "auth": {
+      "header": "Authorization",
+      "prefix": "Bearer "
+    }
+  },
+
+  "request": {
+    "bodyTemplate": {
+      "model": "{{model}}",
+      "n": 1,
+      "size": "1024x1024",
+      "response_format": "b64_json"
+    },
+    "promptPath": "$.prompt",
+    "promptFormat": {
+      "type": "text"
+    }
+  },
+
+  "response": {
+    "transport": {
+      "type": "fetch"
+    },
+    "contentParts": [
+      {
+        "path": "$.data[0].revised_prompt"
+      },
+      {
+        "path": "$.data[0].b64_json",
+        "isMedia": {
+          "type": "image",
+          "mimeType": "image/png"
+        }
+      }
+    ],
+    "error": {
+      "detectPath": "$.error",
+      "messagePath": "$.error.message"
+    }
+  },
+
+  "model": {
+    "useModelContextLength": false,
+    "listPath": "$.data",
+    "namePath": "$.id"
+  },
+
+  "features": {
+    "useKey": true,
+    "useModel": true,
+    "useStreaming": false
+  },
+
+  "uiOverridableSamplers": []
+}
