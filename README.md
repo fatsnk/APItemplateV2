@@ -250,6 +250,7 @@ ForkSilly应用的API模板仓库。
 |------|------|--------|
 | `format` | SSE 数据格式：`"standard"` / `"ndjson"` / `"auto"` | `"standard"` |
 | `doneSignal` | 流结束信号 | `"[DONE]"` |
+| `donePath` | 判断流结束的 JSONPath（值为真时视为完成） | 无。doneSignal或donePath同时存在时，两者都会生效；主要用于ndjson |
 
 #### Polling 传输配置
 
