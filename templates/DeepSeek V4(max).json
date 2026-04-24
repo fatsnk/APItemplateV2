@@ -1,0 +1,99 @@
+{
+  "version": 2,
+  "name": "DeepSeek V4(max)",
+
+  "connection": {
+    "endpoint": "/chat/completions",
+    "streamEndpoint": "/chat/completions",
+    "modelEndpoint": "/models",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "auth": {
+      "header": "Authorization",
+      "prefix": "Bearer "
+    }
+  },
+
+  "request": {
+    "bodyTemplate": {
+      "model": "{{model}}",
+      "messages": [],
+      "temperature": 1,
+      "thinking": { "type": "enabled" },
+      "reasoning_effort": "max",
+      "stream": false
+    },
+    "samplerMappings": [
+      { "samplerID": "temperature", "path": "$.temperature" },
+      { "samplerID": "maxTokens", "path": "$.max_tokens", "transform": "integer" },
+      { "samplerID": "topP", "path": "$.top_p" },
+      { "samplerID": "topK", "path": "$.top_k", "transform": "integer" },
+      { "samplerID": "frequencyPenalty", "path": "$.frequency_penalty" },
+      { "samplerID": "presencePenalty", "path": "$.presence_penalty" },
+      { "samplerID": "reasoningEffort", "path": "$.reasoning_effort" }
+    ],
+    "promptPath": "$.messages",
+    "promptFormat": {
+      "type": "chat",
+      "roles": {
+        "user": "user",
+        "assistant": "assistant",
+        "system": "system"
+      },
+      "contentKey": "content"
+    }
+  },
+
+  "response": {
+    "transport": {
+      "type": "sse",
+      "format": "standard",
+      "doneSignal": "[DONE]"
+    },
+    "contentPath": "$.choices[0].message.content",
+    "streamContentPath": "$.choices[0].delta.content",
+    "reasoningPath": "$.choices[0].message.reasoning_content",
+    "streamReasoningPath": "$.choices[0].delta.reasoning_content",
+    "error": {
+      "detectPath": "$.error",
+      "messagePath": "$.error.message"
+    }
+  },
+
+  "model": {
+    "useModelContextLength": false,
+    "listPath": "$.data",
+    "namePath": "$.id"
+  },
+
+  "features": {
+    "useKey": true,
+    "useModel": true,
+    "useStreaming": true
+  },
+
+  "uiOverridableSamplers": [
+    "temperature",
+    "maxTokens",
+    "topP",
+    "topK",
+    "frequencyPenalty",
+    "reasoningEffort",
+    "presencePenalty"
+  ],
+
+  "media": {
+    "supportsImages": true,
+    "imageContentTemplate": {
+      "type": "image_url",
+      "image_url": {
+        "url": "data:{{mime_type}};base64,{{image_base64}}"
+      }
+    },
+    "textContentTemplate": {
+      "type": "text",
+      "text": "{{text}}"
+    }
+  }
+}
