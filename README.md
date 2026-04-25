@@ -630,7 +630,7 @@ Claude：
 ## 制作新模板的步骤
 
 1. 阅读目标 API 的官方文档，了解请求/响应格式
-2. 复制一个最接近的示例模板作为起点
+2. 复制一个最接近的[示例模板](https://github.com/fatsnk/APItemplateV2/tree/main/templates)作为起点
 3. 修改 `connection` 中的端点路径和认证方式
 4. 修改 `bodyTemplate`，放入 API 要求的固定字段
 5. 配置 `samplerMappings`，将标准参数映射到 `bodyTemplate` 中的正确路径
